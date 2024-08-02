@@ -1,10 +1,12 @@
 from api.system_operation import SystemOperations
 from api.file_operations import FileOperations
 import base64
+import getpass
+import tempfile
 
 def get_valid_password():
     while True:
-        password = input("Enter the master password for the file system (8 characters): ")
+        password = getpass.getpass("Enter the master password for the file system (8 characters): ")
         if len(password) == 8:
             return password
         print("Password must be exactly 8 characters long. Please try again.")
@@ -42,12 +44,14 @@ def main():
                 if decode:
                     print("File content:", content)
                 else:
-                    print("File content (base64 encoded):", base64.b64encode(content).decode('utf-8'))
-                    save_path = input("Enter path to save the file (or press Enter to skip): ")
-                    if save_path:
-                        with open(save_path, 'wb') as f:
-                            f.write(content)
-                        print(f"File saved to {save_path}")
+                    encoded_content = base64.b64encode(content).decode('utf-8')
+                    if len(encoded_content) > 1000:
+                        with tempfile.NamedTemporaryFile(delete=False, mode='w', suffix='.txt') as temp_file:
+                            temp_file.write(encoded_content)
+                            temp_file_path = temp_file.name
+                        print(f"File content is too long. Saved encoded content to {temp_file_path}")
+                    else:
+                        print("File content (base64 encoded):", encoded_content)
             
             elif choice == '3':
                 file_id = input("Enter the file ID to delete: ")
