@@ -1,9 +1,8 @@
-import uuid
+import os
 
-def generate_unique_id() -> str:
-    """Generates a unique identifier for a file."""
-    return str(uuid.uuid4())
+def create_directory_if_not_exists(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
 
-def log(message: str):
-    """Logs a message (could be extended to log to a file)."""
-    print(f"[LOG] {message}")
+def is_valid_path(path):
+    return os.path.exists(path) and os.path.isdir(path)
