@@ -7,7 +7,7 @@ import tempfile
 def get_valid_password():
     while True:
         password = getpass.getpass("Enter the master password for the file system (8 characters): ")
-        if len(password) == 8:
+        if len(password) >= 8:
             return password
         print("Password must be exactly 8 characters long. Please try again.")
 

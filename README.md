@@ -1,77 +1,129 @@
 # NovelEditor
-Core Components
-The core components include the following modules:
 
-Encryption
-File Handler
-File System Initializer
-Secure Storage
-Utility Functions
-API Components
-The API components provide high-level operations for file management and system deployment:
+NovelEditor - это ....
 
-File Operations
-System Operations
-Core Components
-1. Encryption (encryption.py)
-AdvancedEncryptor
-A class to handle encryption and decryption of data using AES encryption.
+## Файловая система NovelEditor
 
-Methods:
-__init__(self, key_file: str = 'master_key.key', salt_file: str = 'salt.key') -> None: Initializes the AdvancedEncryptor with specified key and salt files.
-_load_or_generate_key(self, file_path: str) -> bytes: Loads an existing key from the file path or generates a new key if the file does not exist.
-_derive_key(self, password: str) -> bytes: Derives a cryptographic key from a password using PBKDF2 HMAC.
-encrypt(self, data: bytes, password: str) -> bytes: Encrypts the provided data using the derived key from the password.
-decrypt(self, encrypted_data: bytes, password: str) -> bytes: Decrypts the provided encrypted data using the derived key from the password.
-2. File Handler (file_handler.py)
-SecureFileHandler
-A class to handle secure file operations such as adding, reading, deleting, and listing files.
+Файловая система NovelEditor обеспечивает безопасное хранение и управление файлами с использованием шифрования.
 
-Methods:
-__init__(self, base_path: str, master_password: str) -> None: Initializes the SecureFileHandler with the base path and master password.
-add_file(self, file_path: str, file_id: str) -> None: Adds and encrypts a file with a given file ID.
-read_file(self, file_id: str, decode: bool = False) -> str: Reads and decrypts a file by its file ID.
-delete_file(self, file_id: str) -> None: Deletes a file by its file ID.
-list_files(self) -> List[str]: Lists all stored file IDs.
-3. File System Initializer (initializer.py)
-FileSystemInitializer
-A class to initialize the file system for secure storage.
+### Содержание
 
-Methods:
-__init__(self, base_path: str, master_password: str) -> None: Initializes the FileSystemInitializer with the base path and master password.
-initialize(self) -> None: Performs the initialization steps for the file system.
-_initialize_encryption(self) -> None: Initializes the encryption by creating key and salt files if they do not exist.
-_create_empty_index(self) -> None: Creates an empty index file for storing file metadata if it does not exist.
-4. Secure Storage (storage.py)
-SecureStorage
-A class to handle secure storage and retrieval of file metadata.
+- [Компоненты ядра (Core)](#компоненты-ядра-core)
+- [API компоненты](#api-компоненты)
 
-Methods:
-__init__(self, base_path: str, master_password: str) -> None: Initializes the SecureStorage with the base path and master password.
-_load_index(self) -> Dict[str, str]: Loads the file index from the encrypted index file.
-_save_index(self) -> None: Saves the current file index to the encrypted index file.
-add_file(self, file_id: str, encrypted_path: str) -> None: Adds a file to the index.
-get_file_path(self, file_id: str) -> Optional[str]: Gets the file path of a file by its file ID.
-remove_file(self, file_id: str) -> None: Removes a file from the index.
-list_files(self) -> List[str]: Lists all stored file IDs.
-5. Utility Functions (utils.py)
-Functions:
-create_directory_if_not_exists(path: str) -> None: Creates a directory if it does not already exist.
-is_valid_path(path: str) -> bool: Checks if a path is a valid directory path.
-API Components
-1. File Operations (file_operations.py)
-FileOperations
-A class to perform file operations such as adding, reading, deleting, and listing files.
+## Компоненты ядра (Core)
 
-Methods:
-__init__(self, file_handler: SecureFileHandler) -> None: Initializes the FileOperations with a SecureFileHandler instance.
-add_file(self, file_path: str, file_id: str) -> None: Adds a file to secure storage.
-read_file(self, file_id: str, decode: bool = False) -> str: Reads a file from secure storage.
-delete_file(self, file_id: str) -> None: Deletes a file from secure storage.
-list_files(self) -> List[str]: Lists all stored file IDs.
-2. System Operations (system_operations.py)
-SystemOperations
-A class to perform system operations such as deploying the file system.
+Основные компоненты включают следующие модули:
 
-Methods:
-deploy(base_path: str, master_password: str) -> SecureFileHandler: Deploys the file system by initializing it and returning a SecureFileHandler instance.
+1. [Шифрование](#шифрование)
+2. [Обработчик файлов](#обработчик-файлов)
+3. [Инициализатор файловой системы](#инициализатор-файловой-системы)
+4. [Безопасное хранилище](#безопасное-хранилище)
+5. [Вспомогательные функции](#вспомогательные-функции)
+
+### Шифрование
+
+Файл: `encryption.py`
+
+#### Класс: AdvancedEncryptor
+
+Класс для обработки шифрования и дешифрования данных с использованием AES шифрования.
+
+Методы:
+- `__init__(self, key_file: str = 'master_key.key', salt_file: str = 'salt.key') -> None`
+- `_load_or_generate_key(self, file_path: str) -> bytes`
+- `_derive_key(self, password: str) -> bytes`
+- `encrypt(self, data: bytes, password: str) -> bytes`
+- `decrypt(self, encrypted_data: bytes, password: str) -> bytes`
+
+### Обработчик файлов
+
+Файл: `file_handler.py`
+
+#### Класс: SecureFileHandler
+
+Класс для обработки безопасных файловых операций, таких как добавление, чтение, удаление и перечисление файлов.
+
+Методы:
+- `__init__(self, base_path: str, master_password: str) -> None`
+- `add_file(self, file_path: str, file_id: str) -> None`
+- `read_file(self, file_id: str, decode: bool = False) -> str`
+- `delete_file(self, file_id: str) -> None`
+- `list_files(self) -> List[str]`
+
+### Инициализатор файловой системы
+
+Файл: `initializer.py`
+
+#### Класс: FileSystemInitializer
+
+Класс для инициализации файловой системы для безопасного хранения.
+
+Методы:
+- `__init__(self, base_path: str, master_password: str) -> None`
+- `initialize(self) -> None`
+- `_initialize_encryption(self) -> None`
+- `_create_empty_index(self) -> None`
+
+### Безопасное хранилище
+
+Файл: `storage.py`
+
+#### Класс: SecureStorage
+
+Класс для обработки безопасного хранения и извлечения метаданных файлов.
+
+Методы:
+- `__init__(self, base_path: str, master_password: str) -> None`
+- `_load_index(self) -> Dict[str, str]`
+- `_save_index(self) -> None`
+- `add_file(self, file_id: str, encrypted_path: str) -> None`
+- `get_file_path(self, file_id: str) -> Optional[str]`
+- `remove_file(self, file_id: str) -> None`
+- `list_files(self) -> List[str]`
+
+### Вспомогательные функции
+
+Файл: `utils.py`
+
+Функции:
+- `create_directory_if_not_exists(path: str) -> None`
+- `is_valid_path(path: str) -> bool`
+
+## API компоненты
+
+API компоненты предоставляют высокоуровневые операции для управления файлами и развертывания системы:
+
+1. [Файловые операции](#файловые-операции)
+2. [Системные операции](#системные-операции)
+
+### Файловые операции
+
+Файл: `file_operations.py`
+
+#### Класс: FileOperations
+
+Класс для выполнения файловых операций, таких как добавление, чтение, удаление и перечисление файлов.
+
+Методы:
+- `__init__(self, file_handler: SecureFileHandler) -> None`
+- `add_file(self, file_path: str, file_id: str) -> None`
+- `read_file(self, file_id: str, decode: bool = False) -> str`
+- `delete_file(self, file_id: str) -> None`
+- `list_files(self) -> List[str]`
+
+### Системные операции
+
+Файл: `system_operations.py`
+
+#### Класс: SystemOperations
+
+Класс для выполнения системных операций, таких как развертывание файловой системы.
+
+Методы:
+- `deploy(base_path: str, master_password: str) -> SecureFileHandler`
+```
+
+Эта версия README.md теперь ясно указывает, что описываемые компоненты относятся к файловой системе более крупного проекта NovelEditor. Структура документации осталась прежней, но контекст был обновлен.
+
+Если вам нужны дальнейшие изменения или дополнения, пожалуйста, дайте мне знать.
