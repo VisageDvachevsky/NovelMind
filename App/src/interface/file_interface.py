@@ -1,6 +1,7 @@
 from src.core.file_manager import FileManager
 from src.core.utils import generate_unique_id
 import base64
+import lzma
 
 class FileInterface:
     def __init__(self, base_directory: str, encryption_key: bytes):
@@ -21,13 +22,14 @@ class FileInterface:
             raise Exception(f"Failed to download file: {e}")
         
     def get_file_data_base64(self, file_id: str) -> str:
-        """Retrieves and returns file data as a Base64-encoded string."""
+        """Retrieves, compresses, and returns file data as a Base64-encoded string."""
         try:
             file_data = self.download_file(file_id)
-            return base64.b64encode(file_data).decode('utf-8')
+            compressed_data = lzma.compress(file_data)
+            return base64.b64encode(compressed_data).decode('utf-8')
         except Exception as e:
             raise Exception(f"Failed to get file data as Base64: {e}")
-
+        
     def delete_file(self, file_id: str) -> None:
         """Deletes a file from the system."""
         try:

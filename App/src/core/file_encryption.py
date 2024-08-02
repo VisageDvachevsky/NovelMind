@@ -1,4 +1,4 @@
-from cryptography.fernet import Fernet
+from cryptography.fernet import Fernet # type: ignore
 import hmac
 import hashlib
 
