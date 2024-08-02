@@ -1,50 +1,32 @@
-from typing import Optional
-from src.core.encryption import EncryptionManager
-from src.core.identifier import IdentifierManager
-from src.core.storage import StorageManager
-import logging
-
-logging.basicConfig(level=logging.INFO)
+from src.core.file_encryption import FileEncryption
+from src.core.storage_handler import StorageHandler
+import os
 
 class FileManager:
-    def __init__(self, encryption_manager: EncryptionManager, identifier_manager: IdentifierManager, storage_manager: StorageManager):
-        self.encryption_manager = encryption_manager
-        self.identifier_manager = identifier_manager
-        self.storage_manager = storage_manager
+    def __init__(self, base_directory: str, encryption_key: bytes):
+        self.storage_handler = StorageHandler(base_directory)
+        self.file_encryption = FileEncryption(encryption_key)
 
-    def add_file(self, file_path: str) -> str:
-        try:
-            with open(file_path, 'rb') as file:
-                data = file.read()
-                logging.info(f"File {file_path} read successfully.")
+    def add_file(self, file_path: str, file_id: str) -> None:
+        """Encrypts and stores a file."""
+        encrypted_data = self.file_encryption.encrypt_file(file_path)
+        self.storage_handler.store_data(file_id, encrypted_data)
 
-            file_id = self.identifier_manager.generate_identifier()
-            encrypted_data = self.encryption_manager.encrypt(data)
-            hash_value = self.encryption_manager.hash_data(data)
-            logging.info(f"File {file_path} encrypted and hashed.")
-
-            self.storage_manager.save_file(file_id, encrypted_data, file_path, hash_value)
-            logging.info(f"File {file_path} added with ID {file_id}.")
-
-            return file_id
-        except Exception as e:
-            logging.error(f"Failed to add file {file_path}: {e}")
-            return ""
-
-    def retrieve_file(self, file_id: str) -> Optional[bytes]:
-        try:
-            encrypted_data = self.storage_manager.load_file(file_id)
-            metadata = self.storage_manager.get_file_metadata(file_id)
-
-            if encrypted_data and metadata:
-                decrypted_data = self.encryption_manager.decrypt(encrypted_data)
-                if self.encryption_manager.hash_data(decrypted_data) == metadata['hash']:
-                    logging.info(f"File {file_id} decrypted and hash verified.")
-                    return decrypted_data
-        except Exception as e:
-            logging.error(f"Failed to retrieve file {file_id}: {e}")
-        logging.warning(f"Failed to retrieve or verify file {file_id}.")
-        return None
+    def get_file_data(self, file_id: str) -> bytes:
+        """Retrieves and decrypts file data by its ID."""
+        encrypted_data = self.storage_handler.retrieve_data(file_id)
+        decrypted_data = self.file_encryption.decrypt_file(encrypted_data)
+        return decrypted_data
 
     def delete_file(self, file_id: str) -> None:
-        self.storage_manager.delete_file(file_id)
+        """Deletes a file from the storage."""
+        self.storage_handler.delete_data(file_id)
+
+    def list_files(self) -> dict:
+        """Lists all files with their IDs."""
+        files = {}
+        for file_name in os.listdir(self.storage_handler.base_directory):
+            if file_name.endswith('.enc'):
+                file_id = file_name[:-4] 
+                files[file_id] = self.get_file_data(file_id)
+        return files
