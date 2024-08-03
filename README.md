@@ -5,12 +5,12 @@
 </div>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/версия-0.0.1-blue.svg" alt="Версия">
-  <img src="https://img.shields.io/badge/лицензия-MIT-green.svg" alt="Лицензия">
+  <strong>Инновационный визуальный редактор для создания визуальных новелл</strong>
 </p>
 
 <p align="center">
-  <strong>Инновационный визуальный редактор для создания визуальных новелл</strong>
+  <img src="https://img.shields.io/badge/версия-0.0.1-blue.svg" alt="Версия">
+  <img src="https://img.shields.io/badge/лицензия-MIT-green.svg" alt="Лицензия">
 </p>
 
 NovelMind - это проект, направленный на упрощение процесса создания визуальных новелл, предоставляя разработчикам мощные инструменты в удобном визуальном интерфейсе, одновременно обеспечивая безопасность их работы.
