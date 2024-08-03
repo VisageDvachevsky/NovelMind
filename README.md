@@ -1,9 +1,9 @@
 # 
 
-<h1 align="center">
-  <img src="./Assets/logo.jpg" alt="NovelMind Icon" width="50" height="50" style="vertical-align: middle; margin-right: 10px;">
-  NovelMind
-</h1>
+<div align="center">
+  <img src="./Assets/logo.jpg" alt="NovelMind Logo" width="150" height="150">
+</div>
+
 <p align="center">
   <img src="https://img.shields.io/badge/версия-1.0.0-blue.svg" alt="Версия">
   <img src="https://img.shields.io/badge/лицензия-MIT-green.svg" alt="Лицензия">
