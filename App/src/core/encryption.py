@@ -4,7 +4,6 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
-from typing import Optional
 from LogSystem.LoggerSystem import Logger
 
 logger = Logger(use_json=True)
@@ -16,15 +15,15 @@ class AdvancedEncryptor:
     A class to handle encryption and decryption of data using AES encryption.
     """
 
-    def __init__(self, key_file: str = 'master_key.key', salt_file: str = 'salt.key') -> None:
+    def __init__(self, key_file: str = None, salt_file: str = None) -> None:
         """
         Initialize the AdvancedEncryptor with specified key and salt files.
 
         :param key_file: The file path to store the encryption key.
         :param salt_file: The file path to store the salt.
         """
-        self.key_file = key_file
-        self.salt_file = salt_file
+        self.key_file = key_file or 'master_key.key'
+        self.salt_file = salt_file or 'salt.key'
         self.master_key = self._load_or_generate_key(self.key_file)
         self.salt = self._load_or_generate_key(self.salt_file)
 

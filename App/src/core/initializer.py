@@ -37,11 +37,11 @@ class FileSystemInitializer:
         encryptor = AdvancedEncryptor()
         key_file = os.path.join(self.base_path, 'master_key.key')
         salt_file = os.path.join(self.base_path, 'salt.key')
-        
+
         if not os.path.exists(key_file):
             with open(key_file, 'wb') as f:
                 f.write(encryptor.master_key)
-        
+
         if not os.path.exists(salt_file):
             with open(salt_file, 'wb') as f:
                 f.write(encryptor.salt)
