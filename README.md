@@ -1,11 +1,11 @@
 # 
 
 <div align="center">
-  <img src="./Assets/logo.jpg" alt="NovelMind Logo" width="150" height="150">
+  <img src="./Assets/logo.png" alt="NovelMind Logo" width="150" height="150">
 </div>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/версия-1.0.0-blue.svg" alt="Версия">
+  <img src="https://img.shields.io/badge/версия-0.0.1-blue.svg" alt="Версия">
   <img src="https://img.shields.io/badge/лицензия-MIT-green.svg" alt="Лицензия">
 </p>
 
