@@ -3,7 +3,12 @@ import base64
 from typing import Optional, List
 from .encryption import AdvancedEncryptor
 from .storage import SecureStorage
+from LogSystem.LoggerSystem import Logger
 
+logger = Logger(use_json=True)
+log_class = logger.log_class()
+
+@log_class
 class SecureFileHandler:
     """
     A class to handle secure file operations such as adding, reading, deleting, and listing files.

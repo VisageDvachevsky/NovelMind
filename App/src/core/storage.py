@@ -2,7 +2,12 @@ import os
 import json
 from typing import Optional, Dict, List
 from .encryption import AdvancedEncryptor
+from LogSystem.LoggerSystem import Logger
 
+logger = Logger(use_json=True)
+log_class = logger.log_class()
+
+@log_class
 class SecureStorage:
     """
     A class to handle secure storage and retrieval of file metadata.
