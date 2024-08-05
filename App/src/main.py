@@ -48,7 +48,6 @@ class PasswordDialog(ctk.CTk):
         self.mainloop()
         return self.password
 
-
 class FileManagerGUI(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -107,9 +106,9 @@ class FileManagerGUI(ctk.CTk):
             if not base_path:
                 return
 
-            password = ctk.CTkInputDialog(text="Enter the master password for the file system (8 characters minimum):", title="Master Password").get_input()
-            if not password or len(password) < 8:
-                messagebox.showerror("Error", "Password must be at least 8 characters long.")
+            password_dialog = PasswordDialog()
+            password = password_dialog.get_password()
+            if not password:
                 return
 
             try:
