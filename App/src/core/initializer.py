@@ -1,12 +1,9 @@
 import os
 from .encryption import AdvancedEncryptor
 from .utils import create_directory_if_not_exists
-from LogSystem.LoggerSystem import Logger
+from LogSystem.Logger_setup import logger_setup
 
-logger = Logger(use_json=True)
-log_class = logger.log_class()
-
-@log_class
+@logger_setup.log_class_instance
 class FileSystemInitializer:
     def __init__(self, base_path: str, master_password: str) -> None:
 

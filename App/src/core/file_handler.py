@@ -3,12 +3,9 @@ import base64
 from typing import Optional, List, Dict
 from .encryption import AdvancedEncryptor
 from .storage import SecureStorage
-from LogSystem.LoggerSystem import Logger
+from LogSystem.Logger_setup import logger_setup
 
-logger = Logger(use_json=True)
-log_class = logger.log_class()
-
-@log_class
+@logger_setup.log_class_instance
 class SecureFileHandler:
     def __init__(self, base_path: str, master_password: str) -> None:
         self.base_path = base_path

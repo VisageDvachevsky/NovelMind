@@ -5,13 +5,10 @@ from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 from cryptography.hazmat.backends import default_backend
-from LogSystem.LoggerSystem import Logger
 import secrets
+from LogSystem.Logger_setup import logger_setup
 
-logger = Logger(use_json=True)
-log_class = logger.log_class()
-
-@log_class
+@logger_setup.log_class_instance
 class AdvancedEncryptor:
     def __init__(self, key_file: str = None, salt_file: str = None, rsa_key_file: str = None):
         self.key_file = key_file or 'master_key.key'

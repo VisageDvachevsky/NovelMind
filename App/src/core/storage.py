@@ -2,12 +2,9 @@ import os
 import json
 from typing import Dict, Any
 from .encryption import AdvancedEncryptor
-from LogSystem.LoggerSystem import Logger
+from LogSystem.Logger_setup import logger_setup
 
-logger = Logger(use_json=True)
-log_class = logger.log_class()
-
-@log_class
+@logger_setup.log_class_instance
 class SecureStorage:
     def __init__(self, base_path: str, master_password: str) -> None:
         self.base_path = base_path
