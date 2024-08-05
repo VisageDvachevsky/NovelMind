@@ -1,6 +1,6 @@
 import os
 import base64
-from typing import Optional, List
+from typing import Optional, List, Dict
 from .encryption import AdvancedEncryptor
 from .storage import SecureStorage
 from LogSystem.LoggerSystem import Logger
@@ -10,52 +10,29 @@ log_class = logger.log_class()
 
 @log_class
 class SecureFileHandler:
-    """
-    A class to handle secure file operations such as adding, reading, deleting, and listing files.
-    """
-
     def __init__(self, base_path: str, master_password: str) -> None:
-        """
-        Initialize the SecureFileHandler with the base path and master password.
-
-        :param base_path: The base directory path for storing files.
-        :param master_password: The master password for encryption and decryption.
-        """
         self.base_path = base_path
         self.encryptor = AdvancedEncryptor()
         self.storage = SecureStorage(base_path, master_password)
         self.master_password = master_password
 
-    def add_file(self, file_path: str, file_id: str) -> None:
-        """
-        Add and encrypt a file with a given file ID.
-
-        :param file_path: The path to the file to be added.
-        :param file_id: The unique identifier for the file.
-        """
+    def add_file(self, file_path: str, dest_path: str) -> None:
         with open(file_path, 'rb') as f:
             file_content = f.read()
         
         encrypted_content = self.encryptor.encrypt(file_content, self.master_password)
+        file_id = os.path.basename(dest_path)
         encrypted_file_path = os.path.join(self.base_path, f'{file_id}.enc')
         
         with open(encrypted_file_path, 'wb') as f:
             f.write(encrypted_content)
         
-        self.storage.add_file(file_id, encrypted_file_path)
+        self.storage.add_file(dest_path, encrypted_file_path)
 
-    def read_file(self, file_id: str, decode: bool = False) -> str:
-        """
-        Read and decrypt a file by its file ID.
-
-        :param file_id: The unique identifier for the file.
-        :param decode: Whether to decode the decrypted content as UTF-8 string or base64.
-        :return: The decrypted content as a string.
-        :raises FileNotFoundError: If the file with the specified ID is not found.
-        """
-        encrypted_file_path = self.storage.get_file_path(file_id)
+    def read_file(self, file_path: str, decode: bool = False) -> str:
+        encrypted_file_path = self.storage.get_file_path(file_path)
         if not encrypted_file_path:
-            raise FileNotFoundError(f"File with id {file_id} not found")
+            raise FileNotFoundError(f"File not found: {file_path}")
 
         with open(encrypted_file_path, 'rb') as f:
             encrypted_content = f.read()
@@ -70,24 +47,28 @@ class SecureFileHandler:
         else:
             return decrypted_content
 
-    def delete_file(self, file_id: str) -> None:
-        """
-        Delete a file by its file ID.
-
-        :param file_id: The unique identifier for the file.
-        :raises FileNotFoundError: If the file with the specified ID is not found.
-        """
-        encrypted_file_path = self.storage.get_file_path(file_id)
+    def delete_file(self, file_path: str) -> None:
+        encrypted_file_path = self.storage.get_file_path(file_path)
         if not encrypted_file_path:
-            raise FileNotFoundError(f"File with id {file_id} not found")
+            raise FileNotFoundError(f"File not found: {file_path}")
 
         os.remove(encrypted_file_path)
-        self.storage.remove_file(file_id)
+        self.storage.remove_file(file_path)
 
-    def list_files(self) -> List[str]:
-        """
-        List all stored file IDs.
+    def list_files(self) -> Dict:
+        return self.storage.get_file_structure()
 
-        :return: A list of file IDs.
-        """
-        return self.storage.list_files()
+    def create_directory(self, dir_path: str) -> None:
+        self.storage.create_directory(dir_path)
+
+    def rename_directory(self, old_path: str, new_path: str) -> None:
+        self.storage.rename_directory(old_path, new_path)
+
+    def delete_directory(self, dir_path: str) -> None:
+        self.storage.delete_directory(dir_path)
+
+    def move_file(self, src_path: str, dest_path: str) -> None:
+        self.storage.move_file(src_path, dest_path)
+
+    def directory_exists(self, dir_path: str) -> bool:
+        return self.storage.directory_exists(dir_path)

@@ -1,52 +1,60 @@
 from core.file_handler import SecureFileHandler
-from typing import Optional, List
+from typing import Optional, List, Dict
+import os
 
 class FileOperations:
-    """
-    A class to perform file operations such as adding, reading, deleting, and listing files.
-    """
-
     def __init__(self, file_handler: SecureFileHandler) -> None:
-        """
-        Initialize the FileOperations with a SecureFileHandler instance.
-
-        :param file_handler: An instance of SecureFileHandler to manage secure file operations.
-        """
         self.file_handler = file_handler
+        self.current_directory = "root"
+
+    def _build_path(self, *parts):
+        return "/".join([self.current_directory] + list(parts))
 
     def add_file(self, file_path: str, file_id: str) -> None:
-        """
-        Add a file to secure storage.
-
-        :param file_path: The path to the file to be added.
-        :param file_id: The unique identifier for the file.
-        """
-        self.file_handler.add_file(file_path, file_id)
+        dest_path = self._build_path(file_id)
+        self.file_handler.add_file(file_path, dest_path)
 
     def read_file(self, file_id: str, decode: bool = False) -> str:
-        """
-        Read a file from secure storage.
-
-        :param file_id: The unique identifier for the file.
-        :param decode: Whether to decode the decrypted content as a UTF-8 string or base64.
-        :return: The decrypted content as a string.
-        :raises FileNotFoundError: If the file with the specified ID is not found.
-        """
-        return self.file_handler.read_file(file_id, decode)
+        file_path = self._build_path(file_id)
+        return self.file_handler.read_file(file_path, decode)
 
     def delete_file(self, file_id: str) -> None:
-        """
-        Delete a file from secure storage.
+        file_path = self._build_path(file_id)
+        self.file_handler.delete_file(file_path)
 
-        :param file_id: The unique identifier for the file.
-        :raises FileNotFoundError: If the file with the specified ID is not found.
-        """
-        self.file_handler.delete_file(file_id)
-
-    def list_files(self) -> List[str]:
-        """
-        List all stored file IDs.
-
-        :return: A list of file IDs.
-        """
+    def list_files(self) -> Dict:
         return self.file_handler.list_files()
+
+    def create_directory(self, dir_name: str) -> None:
+        dir_path = self._build_path(dir_name)
+        self.file_handler.create_directory(dir_path)
+
+    def rename_directory(self, old_name: str, new_name: str) -> None:
+        old_path = self._build_path(old_name)
+        new_path = self._build_path(new_name)
+        self.file_handler.rename_directory(old_path, new_path)
+
+    def delete_directory(self, dir_name: str) -> None:
+        dir_path = self._build_path(dir_name)
+        self.file_handler.delete_directory(dir_path)
+
+    def move_file(self, file_id: str, dest_dir: str) -> None:
+        src_path = self._build_path(file_id)
+        dest_path = self._build_path(dest_dir, file_id)
+        self.file_handler.move_file(src_path, dest_path)
+
+    def change_directory(self, dir_name: str) -> None:
+        if dir_name == "..":
+            if self.current_directory != "root":
+                self.current_directory = os.path.dirname(self.current_directory)
+                if self.current_directory == "":
+                    self.current_directory = "root"
+        else:
+            new_dir = self._build_path(dir_name)
+            if self.file_handler.directory_exists(new_dir):
+                self.current_directory = new_dir
+            else:
+                raise FileNotFoundError(f"Directory not found: {new_dir}")
+
+    def get_current_directory(self) -> str:
+        return self.current_directory

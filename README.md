@@ -62,11 +62,13 @@
 Класс для обработки шифрования и дешифрования данных с использованием AES шифрования.
 
 Методы:
-- `__init__(self, key_file: str = 'master_key.key', salt_file: str = 'salt.key') -> None`
+- `__init__(self, key_file: str = None, salt_file: str = None, rsa_key_file: str = None) -> None`
 - `_load_or_generate_key(self, file_path: str) -> bytes`
 - `_derive_key(self, password: str) -> bytes`
 - `encrypt(self, data: bytes, password: str) -> bytes`
 - `decrypt(self, encrypted_data: bytes, password: str) -> bytes`
+- `rotate_keys(self) -> None`
+- `export_public_key(self) -> bytes`
 
 #### Обработчик файлов
 
@@ -81,7 +83,12 @@
 - `add_file(self, file_path: str, file_id: str) -> None`
 - `read_file(self, file_id: str, decode: bool = False) -> str`
 - `delete_file(self, file_id: str) -> None`
-- `list_files(self) -> List[str]`
+- `list_files(self) -> Dict`
+- `create_directory(self, dir_path: str) -> None`
+- `rename_directory(self, old_path: str, new_path: str) -> None`
+- `delete_directory(self, dir_path: str) -> None`
+- `move_file(self, src_path: str, dest_path: str) -> None`
+- `directory_exists(self, dir_path: str) -> bool`
 
 #### Инициализатор файловой системы
 
@@ -103,16 +110,22 @@
 
 ##### Класс: SecureStorage
 
-Класс для обработки безопасного хранения и извлечения метаданных файлов.
+Класс для обработки безопасного хранения и извлечения метаданных файлов, а также управления структурой директорий.
 
 Методы:
 - `__init__(self, base_path: str, master_password: str) -> None`
-- `_load_index(self) -> Dict[str, str]`
+- `_load_index(self) -> Dict[str, Any]`
 - `_save_index(self) -> None`
 - `add_file(self, file_id: str, encrypted_path: str) -> None`
-- `get_file_path(self, file_id: str) -> Optional[str]`
+- `get_file_path(self, file_path: str) -> Optional[str]`
 - `remove_file(self, file_id: str) -> None`
 - `list_files(self) -> List[str]`
+- `get_file_structure(self) -> Dict[str, Any]`
+- `create_directory(self, dir_path: str) -> None`
+- `rename_directory(self, old_path: str, new_path: str) -> None`
+- `delete_directory(self, dir_path: str) -> None`
+- `move_file(self, src_path: str, dest_path: str) -> None`
+- `directory_exists(self, dir_path: str) -> bool`
 
 #### Вспомогательные функции
 
@@ -144,10 +157,17 @@ API компоненты предоставляют высокоуровневы
 
 Методы:
 - `__init__(self, file_handler: SecureFileHandler) -> None`
+- `_build_path(self, *parts) -> str`
 - `add_file(self, file_path: str, file_id: str) -> None`
 - `read_file(self, file_id: str, decode: bool = False) -> str`
 - `delete_file(self, file_id: str) -> None`
-- `list_files(self) -> List[str]`
+- `list_files(self) -> Dict`
+- `create_directory(self, dir_name: str) -> None`
+- `rename_directory(self, old_name: str, new_name: str) -> None`
+- `delete_directory(self, dir_name: str) -> None`
+- `move_file(self, file_id: str, dest_dir: str) -> None`
+- `change_directory(self, dir_name: str) -> None`
+- `get_current_directory(self) -> str`
 
 #### Системные операции
 
