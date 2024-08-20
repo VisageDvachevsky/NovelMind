@@ -5,7 +5,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 from cryptography.hazmat.backends import default_backend
-from LogSystem.LoggerSystem import Logger
+from src.LogSystem.LoggerSystem import Logger
 import secrets
 
 logger = Logger(use_json=True)

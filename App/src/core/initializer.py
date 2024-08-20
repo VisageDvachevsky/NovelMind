@@ -1,7 +1,7 @@
 import os
 from .encryption import AdvancedEncryptor
 from .utils import create_directory_if_not_exists
-from LogSystem.LoggerSystem import Logger
+from src.LogSystem.LoggerSystem import Logger
 
 logger = Logger(use_json=True)
 log_class = logger.log_class()

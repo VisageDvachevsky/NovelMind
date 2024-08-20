@@ -2,7 +2,7 @@ import os
 import json
 from typing import Dict, Any
 from .encryption import AdvancedEncryptor
-from LogSystem.LoggerSystem import Logger
+from src.LogSystem.LoggerSystem import Logger
 
 logger = Logger(use_json=True)
 log_class = logger.log_class()

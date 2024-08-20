@@ -5,8 +5,8 @@ import base64
 import tempfile
 import threading
 import os
-from api.system_operation import SystemOperations
-from api.file_operations import FileOperations
+from backend.system_operation import SystemOperations
+from backend.file_operations import FileOperations
 
 class PasswordDialog(ctk.CTk):
     def __init__(self, title="Password", prompt="Enter password:", min_length=8):
