@@ -1,10 +1,10 @@
 import os
 import base64
-from cryptography.hazmat.primitives.ciphers.aead import ChaCha20Poly1305
-from cryptography.hazmat.primitives.asymmetric import rsa, padding
-from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
-from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.ciphers.aead import ChaCha20Poly1305 # type: ignore
+from cryptography.hazmat.primitives.asymmetric import rsa, padding # type: ignore
+from cryptography.hazmat.primitives import hashes, serialization # type: ignore
+from cryptography.hazmat.primitives.kdf.scrypt import Scrypt # type: ignore
+from cryptography.hazmat.backends import default_backend # type: ignore
 from src.LogSystem.LoggerSystem import Logger
 import secrets
 

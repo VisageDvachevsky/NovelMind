@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory # type: ignore
 import os
 from .system_operations import system_ops_bp
 from .file_operations import file_ops_bp

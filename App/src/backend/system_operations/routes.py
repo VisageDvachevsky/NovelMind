@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify # type: ignore
 from .service import SystemOperationsService
 
 system_ops_bp = Blueprint('system_ops', __name__)
