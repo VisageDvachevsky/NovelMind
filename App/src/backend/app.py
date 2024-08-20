@@ -4,7 +4,8 @@ from .system_operations import system_ops_bp
 from .file_operations import file_ops_bp
 
 def create_app():
-    app = Flask(__name__, static_folder='../../webview-interface/editor/build')
+    app = Flask(__name__, static_folder='../Webview-interface/Editor/build')
+    print("Static folder path:", os.path.abspath(app.static_folder))
 
     app.register_blueprint(system_ops_bp, url_prefix='/api/system')
     app.register_blueprint(file_ops_bp, url_prefix='/api/files')
