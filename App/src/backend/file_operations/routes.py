@@ -1,110 +1,140 @@
-from flask import Blueprint, request, jsonify # type: ignore
-from .service import FileOperationsService
+import logging
+from flask import Blueprint, request, jsonify
+from .service import FileOperations, SecureFileHandler
 
-file_ops_bp = Blueprint('file_ops', __name__)
-file_service = FileOperationsService()
+file_operations_bp = Blueprint('file_operations', __name__)
 
-@file_ops_bp.route('/add_file', methods=['POST'])
+logger = logging.getLogger(__name__)
+
+file_handler = SecureFileHandler(base_path='/path/to/files', master_password='your_password')
+file_operations = FileOperations(file_handler)
+
+@file_operations_bp.route('/add', methods=['POST'])
 def add_file():
-    data = request.json
-    file_path = data.get('file_path')
-    file_id = data.get('file_id')
-    
+    file_path = request.form['file_path']
+    file_id = request.form['file_id']
+    logger.info(f"Adding file: {file_path} with id: {file_id}")
     try:
-        file_service.add_file(file_path, file_id)
-        return jsonify({"message": "File added successfully"}), 200
+        file_operations.add_file(file_path, file_id)
+        return jsonify({"status": "File added successfully"}), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logger.error(f"Failed to add file {file_id}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
-@file_ops_bp.route('/read_file', methods=['GET'])
+@file_operations_bp.route('/read', methods=['GET'])
 def read_file():
     file_id = request.args.get('file_id')
     decode = request.args.get('decode', 'false').lower() == 'true'
-    
+    logger.info(f"Reading file: {file_id} with decode={decode}")
     try:
-        content = file_service.read_file(file_id, decode)
+        content = file_operations.read_file(file_id, decode)
         return jsonify({"content": content}), 200
+    except FileNotFoundError:
+        logger.error(f"File {file_id} not found")
+        return jsonify({"error": "File not found"}), 404
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logger.error(f"Failed to read file {file_id}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
-@file_ops_bp.route('/delete_file', methods=['DELETE'])
+@file_operations_bp.route('/delete', methods=['POST'])
 def delete_file():
-    file_id = request.args.get('file_id')
-    
+    file_id = request.form['file_id']
+    logger.info(f"Deleting file: {file_id}")
     try:
-        file_service.delete_file(file_id)
-        return jsonify({"message": "File deleted successfully"}), 200
+        file_operations.delete_file(file_id)
+        return jsonify({"status": "File deleted successfully"}), 200
+    except FileNotFoundError:
+        logger.error(f"File {file_id} not found")
+        return jsonify({"error": "File not found"}), 404
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logger.error(f"Failed to delete file {file_id}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
-@file_ops_bp.route('/list_files', methods=['GET'])
+@file_operations_bp.route('/list', methods=['GET'])
 def list_files():
+    logger.info("Listing all files")
     try:
-        files = file_service.list_files()
+        files = file_operations.list_files()
         return jsonify(files), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logger.error(f"Failed to list files: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
-@file_ops_bp.route('/create_directory', methods=['POST'])
+@file_operations_bp.route('/create_directory', methods=['POST'])
 def create_directory():
-    data = request.json
-    dir_name = data.get('dir_name')
-    
+    dir_name = request.form['dir_name']
+    logger.info(f"Creating directory: {dir_name}")
     try:
-        file_service.create_directory(dir_name)
-        return jsonify({"message": "Directory created successfully"}), 200
+        file_operations.create_directory(dir_name)
+        return jsonify({"status": "Directory created successfully"}), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logger.error(f"Failed to create directory {dir_name}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
-@file_ops_bp.route('/rename_directory', methods=['PUT'])
+@file_operations_bp.route('/rename_directory', methods=['POST'])
 def rename_directory():
-    data = request.json
-    old_name = data.get('old_name')
-    new_name = data.get('new_name')
-    
+    old_name = request.form['old_name']
+    new_name = request.form['new_name']
+    logger.info(f"Renaming directory from {old_name} to {new_name}")
     try:
-        file_service.rename_directory(old_name, new_name)
-        return jsonify({"message": "Directory renamed successfully"}), 200
+        file_operations.rename_directory(old_name, new_name)
+        return jsonify({"status": "Directory renamed successfully"}), 200
+    except FileNotFoundError:
+        logger.error(f"Directory {old_name} not found")
+        return jsonify({"error": "Directory not found"}), 404
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logger.error(f"Failed to rename directory {old_name}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
-@file_ops_bp.route('/delete_directory', methods=['DELETE'])
+@file_operations_bp.route('/delete_directory', methods=['POST'])
 def delete_directory():
-    dir_name = request.args.get('dir_name')
-    
+    dir_name = request.form['dir_name']
+    logger.info(f"Deleting directory: {dir_name}")
     try:
-        file_service.delete_directory(dir_name)
-        return jsonify({"message": "Directory deleted successfully"}), 200
+        file_operations.delete_directory(dir_name)
+        return jsonify({"status": "Directory deleted successfully"}), 200
+    except FileNotFoundError:
+        logger.error(f"Directory {dir_name} not found")
+        return jsonify({"error": "Directory not found"}), 404
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logger.error(f"Failed to delete directory {dir_name}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
-@file_ops_bp.route('/move_file', methods=['PUT'])
+@file_operations_bp.route('/move_file', methods=['POST'])
 def move_file():
-    data = request.json
-    file_id = data.get('file_id')
-    dest_dir = data.get('dest_dir')
-    
+    file_id = request.form['file_id']
+    dest_dir = request.form['dest_dir']
+    logger.info(f"Moving file: {file_id} to directory: {dest_dir}")
     try:
-        file_service.move_file(file_id, dest_dir)
-        return jsonify({"message": "File moved successfully"}), 200
+        file_operations.move_file(file_id, dest_dir)
+        return jsonify({"status": "File moved successfully"}), 200
+    except FileNotFoundError:
+        logger.error(f"File {file_id} or directory {dest_dir} not found")
+        return jsonify({"error": "File or directory not found"}), 404
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logger.error(f"Failed to move file {file_id}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
-@file_ops_bp.route('/change_directory', methods=['PUT'])
+@file_operations_bp.route('/change_directory', methods=['POST'])
 def change_directory():
-    data = request.json
-    dir_name = data.get('dir_name')
-    
+    dir_name = request.form['dir_name']
+    logger.info(f"Changing directory to: {dir_name}")
     try:
-        file_service.change_directory(dir_name)
-        return jsonify({"message": "Directory changed successfully"}), 200
+        file_operations.change_directory(dir_name)
+        return jsonify({"status": "Directory changed successfully", "current_directory": file_operations.get_current_directory()}), 200
+    except FileNotFoundError:
+        logger.error(f"Directory {dir_name} not found")
+        return jsonify({"error": "Directory not found"}), 404
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logger.error(f"Failed to change directory to {dir_name}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
-@file_ops_bp.route('/current_directory', methods=['GET'])
+@file_operations_bp.route('/current_directory', methods=['GET'])
 def get_current_directory():
+    logger.info("Getting current directory")
     try:
-        current_dir = file_service.get_current_directory()
-        return jsonify({"current_directory": current_dir}), 200
+        current_directory = file_operations.get_current_directory()
+        return jsonify({"current_directory": current_directory}), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        logger.error(f"Failed to get current directory: {str(e)}")
+        return jsonify({"error": str(e)}), 500

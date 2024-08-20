@@ -1,21 +1,37 @@
-from flask import Flask, send_from_directory # type: ignore
+import logging
+from flask import Flask, jsonify, send_from_directory, request
+from file_operations.routes import file_operations_bp
+from system_operations.routes import system_operations_bp
 import os
-from .system_operations import system_ops_bp
-from .file_operations import file_ops_bp
 
-def create_app():
-    app = Flask(__name__, static_folder='../Webview-interface/Editor/build')
-    print("Static folder path:", os.path.abspath(app.static_folder))
+app = Flask(__name__, static_folder='../frontend/build')
 
-    app.register_blueprint(system_ops_bp, url_prefix='/api/system')
-    app.register_blueprint(file_ops_bp, url_prefix='/api/files')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
-    @app.route('/', defaults={'path': ''})
-    @app.route('/<path:path>')
-    def serve(path):
-        if path != "" and os.path.exists(app.static_folder + '/' + path):
-            return send_from_directory(app.static_folder, path)
-        else:
-            return send_from_directory(app.static_folder, 'index.html')
+app.register_blueprint(file_operations_bp, url_prefix='/file_operations')
+app.register_blueprint(system_operations_bp, url_prefix='/system_operations')
 
-    return app
+@app.route('/')
+def serve_react_app():
+    logger.info("Serving React app")
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/<path:path>')
+def serve_static_files(path):
+    logger.info(f"Serving static file: {path}")
+    file_path = os.path.join(app.static_folder, path)
+    if os.path.exists(file_path):
+        return send_from_directory(app.static_folder, path)
+    else:
+        logger.warning(f"File not found: {path}, redirecting to React app")
+        return send_from_directory(app.static_folder, 'index.html')
+
+@app.errorhandler(404)
+def not_found(e):
+    logger.warning(f"404 error encountered, serving React app for path: {request.path}")
+    return send_from_directory(app.static_folder, 'index.html')
+
+if __name__ == '__main__':
+    logger.info("Starting Flask server")
+    app.run(debug=True)
