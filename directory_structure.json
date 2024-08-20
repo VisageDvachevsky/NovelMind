@@ -1,0 +1,64 @@
+{
+".": 
+    {
+        "App": {
+            "NovelEditor.code-workspace": null,
+            "run.py": null
+        },
+        "src": {
+            "main.py": null,
+            "backend": {
+                "app.py": null,
+                "file_operations.py": null,
+                "system_operation.py": null,
+                "__init__.py": null,
+                "file_operations": {
+                    "routes.py": null,
+                    "service.py": null,
+                    "__init__.py": null
+                },
+                "system_operations": {
+                    "routes.py": null,
+                    "service.py": null,
+                    "__init__.py": null
+                }
+            },
+            "core": {
+                "encryption.py": null,
+                "file_handler.py": null,
+                "initializer.py": null,
+                "storage.py": null,
+                "utils.py": null,
+                "__init__.py": null
+            },
+            "LogSystem": {
+                "LoggerSystem.py": null,
+                "__init__.py": null
+            },
+            "webview-interface": {
+                "editor": {
+                    ".gitignore": null,
+                    "package-lock.json": null,
+                    "package.json": null,
+                    "README.md": null,
+                    "public": {
+                        "favicon.ico": null,
+                        "index.html": null,
+                        "logo192.png": null,
+                        "logo512.png": null,
+                        "manifest.json": null,
+                        "robots.txt": null
+                    },
+                    "src": {
+                        "App.css": null,
+                        "App.js": null,
+                        "index.css": null,
+                        "index.js": null,
+                        "components": {},
+                        "utils": {}
+                    }
+                }
+            }
+        }
+    }
+}
