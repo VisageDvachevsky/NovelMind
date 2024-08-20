@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify # type: ignore
 from .service import FileOperationsService
 
 file_ops_bp = Blueprint('file_ops', __name__)
