@@ -7,8 +7,8 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 class FileOperationsService:
-    def __init__(self):
-        self.fileHandler = SecureFileHandler
+    def __init__(self, fileHandler : SecureFileHandler):
+        self.fileHandler = fileHandler
         self.current_directory = "root"
         logger.debug(f"Initialized FileOperationsService with current_directory: {self.current_directory}")
 

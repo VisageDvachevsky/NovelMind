@@ -1,12 +1,11 @@
 import logging
 from flask import Blueprint, request, jsonify
-from .service import FileOperationsService
+from ..services.service_locator import ServiceLocator
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 file_ops_bp = Blueprint('file_ops', __name__)
-file_service = FileOperationsService()
 
 def log_request_details():
     logger.debug(f"Request path: {request.path}")
@@ -22,7 +21,7 @@ def add_file():
 
     try:
         logger.debug(f"Adding file with path: {file_path}, id: {file_id}")
-        file_service.add_file(file_path, file_id)
+        ServiceLocator.get_file_service().add_file(file_path, file_id)
         logger.info("File added successfully")
         return jsonify({"message": "File added successfully"}), 200
     except Exception as e:
@@ -37,7 +36,7 @@ def read_file():
 
     try:
         logger.debug(f"Reading file with id: {file_id}, decode: {decode}")
-        content = file_service.read_file(file_id, decode)
+        content = ServiceLocator.get_file_service().read_file(file_id, decode)
         logger.info("File read successfully")
         return jsonify({"content": content}), 200
     except Exception as e:
@@ -51,7 +50,7 @@ def delete_file():
 
     try:
         logger.debug(f"Deleting file with id: {file_id}")
-        file_service.delete_file(file_id)
+        ServiceLocator.get_file_service().delete_file(file_id)
         logger.info("File deleted successfully")
         return jsonify({"message": "File deleted successfully"}), 200
     except Exception as e:
@@ -63,7 +62,7 @@ def list_files():
     log_request_details()
     try:
         logger.debug("Listing all files")
-        files = file_service.list_files()
+        files = ServiceLocator.get_file_service().list_files()
         logger.info("Files listed successfully")
         return jsonify(files), 200
     except Exception as e:
@@ -78,7 +77,7 @@ def create_directory():
 
     try:
         logger.debug(f"Creating directory with name: {dir_name}")
-        file_service.create_directory(dir_name)
+        ServiceLocator.get_file_service().create_directory(dir_name)
         logger.info("Directory created successfully")
         return jsonify({"message": "Directory created successfully"}), 200
     except Exception as e:
@@ -94,7 +93,7 @@ def rename_directory():
 
     try:
         logger.debug(f"Renaming directory from {old_name} to {new_name}")
-        file_service.rename_directory(old_name, new_name)
+        ServiceLocator.get_file_service().rename_directory(old_name, new_name)
         logger.info("Directory renamed successfully")
         return jsonify({"message": "Directory renamed successfully"}), 200
     except Exception as e:
@@ -108,7 +107,7 @@ def delete_directory():
 
     try:
         logger.debug(f"Deleting directory with name: {dir_name}")
-        file_service.delete_directory(dir_name)
+        ServiceLocator.get_file_service().delete_directory(dir_name)
         logger.info("Directory deleted successfully")
         return jsonify({"message": "Directory deleted successfully"}), 200
     except Exception as e:
@@ -124,7 +123,7 @@ def move_file():
 
     try:
         logger.debug(f"Moving file with id: {file_id} to directory: {dest_dir}")
-        file_service.move_file(file_id, dest_dir)
+        ServiceLocator.get_file_service().move_file(file_id, dest_dir)
         logger.info("File moved successfully")
         return jsonify({"message": "File moved successfully"}), 200
     except Exception as e:
@@ -139,7 +138,7 @@ def change_directory():
 
     try:
         logger.debug(f"Changing current directory to: {dir_name}")
-        file_service.change_directory(dir_name)
+        ServiceLocator.get_file_service().change_directory(dir_name)
         logger.info("Directory changed successfully")
         return jsonify({"message": "Directory changed successfully"}), 200
     except Exception as e:
@@ -151,7 +150,7 @@ def get_current_directory():
     log_request_details()
     try:
         logger.debug("Getting current directory")
-        current_dir = file_service.get_current_directory()
+        current_dir = ServiceLocator.get_file_service().get_current_directory()
         logger.info(f"Current directory: {current_dir}")
         return jsonify({"current_directory": current_dir}), 200
     except Exception as e:
