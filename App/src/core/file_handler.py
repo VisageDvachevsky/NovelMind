@@ -17,7 +17,7 @@ class SecureFileHandler:
         self.master_password = master_password
 
     def add_file(self, file_path: str, dest_path: str) -> None:
-        logger.debug(f"SecureFileHandler.add_file called with src_path: {src_path}, dest_path: {dest_path}")
+        # logger.debug(f"SecureFileHandler.add_file called with file_path: {file_path}, dest_path: {dest_path}")
         with open(file_path, 'rb') as f:
             file_content = f.read()
         

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify # type: ignore
-from .service import SystemOperationsService
+from ..services.service_locator import ServiceLocator
 import os
 import logging
 
@@ -17,7 +17,7 @@ def deploy():
     try:
         logger.debug(f"Deploying system at base path: {base_path}")
         os.chdir(base_path)
-        SystemOperationsService.deploy(base_path, master_password)
+        ServiceLocator.get_system_service().deploy(base_path, master_password)
         logger.info("System deployed successfully")
         return jsonify({"message": "System deployed successfully"}), 200
     except ValueError as e:
