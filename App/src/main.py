@@ -5,8 +5,8 @@ import base64
 import tempfile
 import threading
 import os
-from backend.system_operation import SystemOperations
-from backend.file_operations import FileOperations
+from backend.system_operations import SystemOperationsService
+from backend.file_operations import FileOperationsService
 
 class PasswordDialog(ctk.CTk):
     def __init__(self, title="Password", prompt="Enter password:", min_length=8):
@@ -113,8 +113,8 @@ class FileManagerGUI(ctk.CTk):
 
             try:
                 os.chdir(base_path)
-                file_handler = SystemOperations.deploy(base_path, password)
-                self.file_ops = FileOperations(file_handler)
+                file_handler = SystemOperationsService.deploy(base_path, password)
+                self.file_ops = FileOperationsService(file_handler)
                 self.current_dir = self.file_ops.get_current_directory()
                 self.update_file_list()
                 self.deploy_button.configure(state="disabled")

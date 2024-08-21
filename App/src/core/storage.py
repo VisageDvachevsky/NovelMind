@@ -68,7 +68,7 @@ class SecureStorage:
             self._save_index()
 
     def get_file_structure(self) -> Dict[str, Any]:
-        return self.index["root"]
+        return self.index["root"] if self.index.get("root") else []
 
     def create_directory(self, dir_path: str) -> None:
         parts = dir_path.split('/')

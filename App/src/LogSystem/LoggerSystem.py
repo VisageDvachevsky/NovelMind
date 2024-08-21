@@ -69,13 +69,17 @@ class Logger:
     def _log_function(self, func: Callable) -> Callable:
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
-            sig = inspect.signature(func)
-            bound_args = sig.bind(*args, **kwargs)
-            bound_args.apply_defaults()
+            try:
+                sig = inspect.signature(func)
+                bound_args = sig.bind(*args, **kwargs)
+                bound_args.apply_defaults()
 
-            arg_str = ", ".join(f"{k}={v!r}" for k, v in bound_args.arguments.items())
-            self.logger.info(f"Calling {func.__name__}({arg_str})")
-
+                arg_str = ", ".join(f"{k}={v!r}" for k, v in bound_args.arguments.items())
+                self.logger.info(f"Calling {func.__name__}({arg_str})")
+            except Exception as bind_exception:
+                self.logger.error(f"Error binding arguments in {func.__name__}: {bind_exception}")
+                raise
+            
             start_time = time.time()
 
             try:
@@ -98,6 +102,7 @@ class Logger:
                 self.logger.debug(f"{func.__name__} execution time: {end_time - start_time:.4f} seconds")
 
         return wrapper
+
 
     def log_class(self) -> Callable[[Type], Type]:
         def decorator(cls: Type) -> Type:
