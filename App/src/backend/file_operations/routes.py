@@ -2,7 +2,6 @@ import logging
 from flask import Blueprint, request, jsonify
 from .service import FileOperationsService
 
-# Настройка логирования
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 

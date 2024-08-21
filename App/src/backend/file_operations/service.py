@@ -3,7 +3,6 @@ from src.core.file_handler import SecureFileHandler
 from typing import Dict
 import os
 
-# Настройка логирования
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
