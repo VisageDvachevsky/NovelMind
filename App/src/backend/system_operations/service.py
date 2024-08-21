@@ -1,5 +1,4 @@
 from src.core.utils import is_valid_path
-from src.core.file_handler import SecureFileHandler
 from src.core.initializer import FileSystemInitializer
 
 class SystemOperationsService:
