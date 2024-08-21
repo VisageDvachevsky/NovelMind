@@ -51,7 +51,6 @@ function FileManager() {
       </Row>
       <Row>
         <Col>
-          {/* Используем компонент FileList для отображения файлов */}
           <FileList files={fileList} />
         </Col>
       </Row>
