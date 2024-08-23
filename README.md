@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./Assets/logo.png" alt="NovelMind Logo" width="150" height="150">
+  <img src="./Assets/logo.jpg" alt="NovelMind Logo" width="2560" height="763">
   <h1>NovelMind</h1>
   <p><strong>Инновационный визуальный редактор для создания визуальных новелл</strong></p>
   <p>
