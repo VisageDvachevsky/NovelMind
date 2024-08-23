@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./Assets/logo.jpg" alt="NovelMind Logo">
+  <img src="./Assets/logo.webp" alt="NovelMind Logo">
   <h1>NovelMind</h1>
   <p><strong>Инновационный визуальный редактор для создания визуальных новелл</strong></p>
   <p>
