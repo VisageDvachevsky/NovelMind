@@ -59,7 +59,8 @@ NovelMind - это проект, направленный на упрощени�
 
 <details>
 <summary style="font-size: 1.2em; cursor: pointer;"><strong>Развернуть/Свернуть Дорожную карту</strong></summary>
-<div align="center" style="margin-top: 20px; animation: fadeIn 1s;"><img src="./Assets/roadmap.png" alt="Roadmap" width="800" style="border:2px solid #ddd; border-radius:15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+<div align="center" style="margin-top: 20px; animation: fadeIn 1s;">
+  <img src="./Assets/roadmap.png" alt="Roadmap" width="800" style="border:2px solid #ddd; border-radius:15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
 </div>
 <p align="center" style="font-style: italic; margin-top: 10px;">
 Изображение дорожной карты отражает планы и этапы развития NovelMind. На каждом этапе предусмотрены обновления, улучшающие функциональность и удобство использования.
